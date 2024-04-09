@@ -15,10 +15,23 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
   if (url === "/message" && method === "POST") {
-    fs.writeFileSync("message.txt", "dummy data");
-    res.statusCode = 302;
-    res.setHeader("Location", "/");
-    return res.end();
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    req.on("end", () => {
+      console.log(body);
+      const semiParsedBody = Buffer.concat(body);
+      console.log(semiParsedBody, "semiParsedBody");
+      const parsedBody = semiParsedBody.toString();
+      console.log(parsedBody, "parsedBody");
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302;
+      res.setHeader("Location", "/");
+      return res.end();
+    });
   }
   res.write("<h1>no condition route </h1>");
   res.end();
