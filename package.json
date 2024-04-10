@@ -1,0 +1,23 @@
+{
+  "name": "node-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BhojrajPathak001/Node-js.git"
+  },
+  "author": "Bhojraj pathak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BhojrajPathak001/Node-js/issues"
+  },
+  "homepage": "https://github.com/BhojrajPathak001/Node-js#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

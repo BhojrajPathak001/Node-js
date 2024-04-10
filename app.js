@@ -18,19 +18,22 @@ const server = http.createServer((req, res) => {
     const body = [];
     req.on("data", (chunk) => {
       console.log(chunk);
-      body.push(chunk);
+      body.push(chunk); 
     });
-    req.on("end", () => {
+    return req.on("end", () => {
       console.log(body);
       const semiParsedBody = Buffer.concat(body);
       console.log(semiParsedBody, "semiParsedBody");
       const parsedBody = semiParsedBody.toString();
       console.log(parsedBody, "parsedBody");
       const message = parsedBody.split("=")[1];
-      fs.writeFileSync("message.txt", message);
-      res.statusCode = 302;
-      res.setHeader("Location", "/");
-      return res.end();
+
+      fs.writeFileSync("message.txt", message); //blocking code
+      fs.writeFile("message.txt", message, (err) => {
+        res.statusCode = 302;
+        res.setHeader("Location", "/");
+        return res.end();
+      }); //non blocking code
     });
   }
   res.write("<h1>no condition route </h1>");
