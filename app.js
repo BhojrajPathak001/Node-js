@@ -11,4 +11,4 @@ app.use((req, res, next) => {
   res.send("<h1>Hello from express</h1>");
 });
 
-app.listen(3000);
+app.listen(3000); //this is same as create server and then listen to the port as in node js
