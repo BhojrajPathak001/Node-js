@@ -10,7 +10,11 @@ app.use(bodyParser.json());
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(adminRoutes);
+app.use("/admin", adminRoutes);
 app.use(shopsRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).send("page not found");
+});
 
 app.listen(3000); //this is same as create server and then listen to the port as in node js
