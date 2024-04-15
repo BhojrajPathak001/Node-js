@@ -17,9 +17,7 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  console.log('inside the get products route ');
   Product.fetchAll((products) => {
-    console.log('Hello');
     res.render("shop", {
       prods: products,
       pageTitle: "Shop",
