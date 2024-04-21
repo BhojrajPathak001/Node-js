@@ -17,6 +17,19 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((arr) => {
+  //     const [product] = arr;
+  //     const dataValues = product.dataValues;
+  //     res.render("shop/product-detail", {
+  //       product: dataValues,
+  //       pageTitle: dataValues.title,
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
   Product.findByPk(prodId)
     .then((product) => {
       res.render("shop/product-detail", {
