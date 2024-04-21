@@ -1,22 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const db = require("../util/database");
 const Cart = require("./cart");
-const p = path.join(
-  path.dirname(process.mainModule.filename),
-  "data",
-  "products.json"
-);
-
-const getProductsFromFile = (cb) => {
-  fs.readFile(p, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
-      cb(JSON.parse(fileContent));
-    }
-  });
-};
-
 module.exports = class Product {
   constructor(id, title, imageUrl, description, price) {
     this.id = id;
@@ -27,46 +10,16 @@ module.exports = class Product {
   }
 
   save() {
-    getProductsFromFile((products) => {
-      if (this.id) {
-        const existingProductIndex = products.findIndex(
-          (prod) => prod.id === this.id
-        );
-        const updatedProudcts = [...products];
-        updatedProudcts[existingProductIndex] = this;
-        fs.writeFile(p, JSON.stringify(updatedProudcts), (err) => {
-          console.log(err);
-        });
-      } else {
-        this.id = Math.random().toString();
-        products.push(this);
-        fs.writeFile(p, JSON.stringify(products), (err) => {
-          console.log(err);
-        });
-      }
-    });
+    return db.execute(
+      "INSERT INTO products (title,price,description,imageUrl) VALUES (?,?,?,?)",
+      [this.title, this.price, this.description, this.imageUrl]
+    );
   }
 
-  static deleteById(id) {
-    getProductsFromFile((products) => {
-      const product = products.find((prod) => prod.id === id);
-      const updatedProudcts = products.filter((prod) => prod.id !== id);
-      fs.writeFile(p, JSON.stringify(updatedProudcts), (err) => {
-        if (!err) {
-          Cart.deleteProduct(id, product.price);
-        }
-      });
-    });
-  }
+  static deleteById(id) {}
 
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
+  static fetchAll() {
+    return db.execute("SELECT * FROM products");
   }
-  static getProductById(productId, cb) {
-    getProductsFromFile((products) => {
-      const product = products.find((prod) => productId === prod.id);
-      cb(product);
-    });
-  }
-
+  static getProductById(productId) {}
 };
