@@ -46,7 +46,6 @@ exports.getProduct = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
   Product.findAll()
     .then((rows) => {
-      console.log(rows, "products here");
       res.render("shop/index", {
         prods: rows,
         pageTitle: "Shop",
@@ -94,25 +93,21 @@ exports.getCheckout = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProducts = [];
-      for (const product of products) {
-        const cartProductsData = cart.products.find(
-          (prod) => prod.id === product.id
-        );
-        if (cartProductsData) {
-          cartProducts.push({
-            productData: product,
-            qty: cartProductsData.qty,
-          });
-        }
-      }
+  req.user
+    .getCart()
+    .then((cart) => {
+      console.log(cart, "current user cart");
+      return cart.getProducts();
+    })
+    .then((products) => {
+      console.log(products, "cartProducts");
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart ",
-        products: cartProducts,
+        products: products,
       });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
