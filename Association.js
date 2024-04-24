@@ -37,7 +37,6 @@ sequelize
     return country.getCapital();
   })
   .then((capital) => {
-    console.log(capital, "getCapital");
   })
   .catch((err) => {
     console.log(err);
