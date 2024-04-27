@@ -5,6 +5,7 @@ const errorController = require("./controllers/error");
 const mongoConnect = require("./util/database").mongoConnect;
 const adminRoutes = require("./routes/admin");
 const app = express();
+const shopRoutes = require("./routes/shop");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -24,8 +25,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
+// app.use("/admin", adminRoutes);
+app.use(shopRoutes);
 
 app.use(errorController.get404);
 
