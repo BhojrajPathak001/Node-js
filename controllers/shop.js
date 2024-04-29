@@ -3,7 +3,6 @@ const Product = require("../models/product");
 exports.getProducts = (req, res, next) => {
   Product.fetchAll()
     .then((products) => {
-      console.log("products", products);
       res.render("shop/product-list", {
         prods: products,
         pageTitle: "All Products",

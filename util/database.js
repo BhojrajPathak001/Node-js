@@ -8,7 +8,6 @@ const mongoConnect = (callback) => {
     .then((client) => {
       console.log("mogodb connected");
       _db = client.db();
-      console.log('typeof',typeof _db);
       callback();
     })
     .catch((err) => {
