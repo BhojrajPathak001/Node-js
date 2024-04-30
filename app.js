@@ -6,6 +6,7 @@ const mongoConnect = require("./util/database").mongoConnect;
 const adminRoutes = require("./routes/admin");
 const app = express();
 const shopRoutes = require("./routes/shop");
+const User = require("./models/user");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -14,15 +15,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then((user) => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-  next();
+  User.findById("66304071a958003f3a9e912a")
+    .then((user) => {
+      console.log("user here", user);
+      req.user = user;
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.use("/admin", adminRoutes);
