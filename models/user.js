@@ -12,7 +12,7 @@ class User {
   }
   addToCart(product) {
     const cartProductIndex = this.cart.items.findIndex((cp) => {
-      return cp.id == product.id; //yaha par == ka reason hai
+      return cp.productId == this._id; //yaha par == ka reason hai
     });
 
     let newQuantity = 1;
