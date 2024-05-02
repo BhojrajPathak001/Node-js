@@ -66,6 +66,7 @@ exports.postCart = (req, res, next) => {
     })
     .then((result) => {
       console.log("product added in cart", result);
+      res.redirect("/cart");
     })
     .catch((err) => {
       console.log(err);
@@ -74,16 +75,7 @@ exports.postCart = (req, res, next) => {
 exports.postCartDeleteProudct = (req, res, next) => {
   const prodId = req.body.productId;
   req.user
-    .getCart()
-    .then((cart) => {
-      console.log("cart.cartItem", cart.cartItem);
-      return cart.getProducts({ where: { id: prodId } });
-    })
-    .then((products) => {
-      const product = products[0];
-      console.log("product.cartItem", product.cartItem);
-      return product.cartItem.destroy();
-    })
+    .deleteItemFromCart(prodId)
     .then(() => {
       res.redirect("/cart");
     })
