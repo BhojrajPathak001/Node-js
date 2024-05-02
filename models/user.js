@@ -8,11 +8,11 @@ class User {
     this.name = username;
     this.email = email;
     this.cart = cart;
-    this.prodId = id;
+    this.id = id;
   }
   addToCart(product) {
     const cartProductIndex = this.cart.items.findIndex((cp) => {
-      return cp.productId == this._id; //yaha par == ka reason hai
+      return cp.productId.toString() === product._id.toString(); //yaha par == ka reason hai
     });
 
     let newQuantity = 1;
@@ -31,10 +31,7 @@ class User {
     const db = getDb();
     return db
       .collection("users")
-      .updateOne(
-        { _id: new ObjectId(this.prodId) },
-        { $set: { cart: updatedCart } }
-      );
+      .updateOne({ _id: this.id }, { $set: { cart: updatedCart } });
   }
   save() {
     const db = getDb();
