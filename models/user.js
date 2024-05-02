@@ -33,6 +33,26 @@ class User {
       .collection("users")
       .updateOne({ _id: this.id }, { $set: { cart: updatedCart } });
   }
+  getCart() {
+    const productIds = this.cart.items.map((i) => {
+      return i.productId;
+    });
+    const db = getDb();
+    return db
+      .collection("products")
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then((products) => {
+        return products.map((p) => {
+          return {
+            ...p,
+            quantity: this.cart.items.find((item) => {
+              return p._id.toString() === item.productId.toString();
+            }).quantity,
+          };
+        });
+      });
+  }
   save() {
     const db = getDb();
     return db.collection("users").insertOne(this);
