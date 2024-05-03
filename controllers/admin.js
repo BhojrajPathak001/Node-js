@@ -19,6 +19,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
+    userId: req.user, //yaha par apne aap id utha lega yeh mongoose ka convinient feature hai
   });
 
   product
@@ -52,14 +53,18 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  const updatedProduct = {
-    title: req.body.title,
-    price: req.body.price,
-    imageUrl: req.body.imageUrl,
-    description: req.body.description,
-  };
-  Product.updateById(prodId, updatedProduct)
-    .then(() => {
+  const title = req.body.title;
+  const price = req.body.price;
+  const imageUrl = req.body.imageUrl;
+  const description = req.body.description;
+
+  Product.findById(prodId)
+    .then((product) => {
+      product.title = title;
+      product.price = price;
+      product.imageUrl = imageUrl;
+      product.description = description;
+      product.save();
       res.redirect("/admin/products");
     })
     .catch((err) => {
@@ -68,7 +73,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("admin/products", {
         prods: products,
@@ -83,8 +88,9 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deletebyId(prodId)
+  Product.findByIdAndDelete(prodId)
     .then(() => {
+      console.log("product delete successfully");
       res.redirect("/admin/products");
     })
     .catch((err) => {
