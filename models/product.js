@@ -18,6 +18,11 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 // const mongodb = require("mongodb");
@@ -98,4 +103,4 @@ const productSchema = new Schema({
 //   }
 // }
 
-module.exports = mongoose.model("product", productSchema);
+module.exports = mongoose.model("Product", productSchema);
