@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findById("66352a7480543e749bd44cfa")
+  User.findById("6635ddbd03b03bfbe94e0d0b")
     .then((user) => {
       req.user = user;
       next();
@@ -37,7 +37,6 @@ mongoose
   .then((result) => {
     User.find()
       .then((user) => {
-        console.log(user.length);
         if (user.length === 0) {
           const user = new User({
             name: "bhojraj",
@@ -46,6 +45,7 @@ mongoose
               items: [],
             },
           });
+          console.log("user created and saved");
           user.save();
         }
       })
