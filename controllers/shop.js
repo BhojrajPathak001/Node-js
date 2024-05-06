@@ -39,6 +39,7 @@ exports.getIndex = (req, res, next) => {
         prods: rows,
         pageTitle: "Shop",
         path: "/",
+        isAuthenticated: false,
       });
     })
     .catch((err) => {
