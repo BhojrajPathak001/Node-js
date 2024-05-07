@@ -53,24 +53,7 @@ app.use(errorController.get404);
 
 mongoose
   .connect(MONGODB_URI)
-  .then((result) => {
-    User.find()
-      .then((user) => {
-        if (user.length === 0) {
-          const user = new User({
-            name: "bhojraj",
-            email: "bhojrajpathak@gmail.com",
-            cart: {
-              items: [],
-            },
-          });
-          console.log("user created and saved");
-          user.save();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  .then(() => {
     app.listen(3000);
     console.log("mongodb connected");
   })

@@ -1,15 +1,24 @@
 const User = require("../models/user");
+const bcryptjs = require("bcryptjs");
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isAuthenticated: req.session.isLoggedIn,
+    isAuthenticated: false,
+  });
+};
+
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Signup",
+    isAuthenticated: false,
   });
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findById("6635ddbd03b03bfbe94e0d0b")
+  User.findById("5bab316ce0a7c75f783cb8a8")
     .then((user) => {
       req.session.isLoggedIn = true;
       req.session.user = user;
@@ -18,10 +27,34 @@ exports.postLogin = (req, res, next) => {
         res.redirect("/");
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch((err) => console.log(err));
+};
+
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        res.redirect("/signup");
+      }
+      return bcryptjs.hash(password, 12);
+    })
+    .then((encryptedPass) => {
+      const newUser = new User({
+        email: email,
+        password: encryptedPass,
+        cart: { items: [] },
+      });
+      return newUser.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
     });
 };
+
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
