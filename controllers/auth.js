@@ -1,6 +1,16 @@
 const bcrypt = require("bcryptjs");
-
+const nodemailer = require("nodemailer");
 const User = require("../models/user");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  secure: true,
+  post: 465,
+  auth: {
+    user: "iamindeed27@gmail.com",
+    pass: "pamttqhkmxfjooit",
+  },
+});
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");
@@ -86,6 +96,12 @@ exports.postSignup = (req, res, next) => {
         })
         .then((result) => {
           res.redirect("/login");
+          return transporter.sendMail({
+            from: "indeedcommerce.com",
+            to: email,
+            subject: "sign up",
+            text: "succesfuflly created the account on indeedcommerce.com",
+          });
         });
     })
     .catch((err) => {
