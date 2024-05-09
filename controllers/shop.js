@@ -33,7 +33,6 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  console.log(222, req.session);
   Product.find()
     // .select("title price")
     // .populate("userId")
