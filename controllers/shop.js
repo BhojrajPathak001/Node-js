@@ -73,7 +73,7 @@ exports.postCart = (req, res, next) => {
       return req.user.addToCart(product);
     })
     .then((result) => {
-      console.log("product added in cart", result);
+      console.log("product added in cart");
       res.redirect("/cart");
     })
     .catch((err) => {
@@ -99,7 +99,6 @@ exports.postOrder = (req, res, next) => {
       const products = user.cart.items.map((i) => {
         return { product: i.productId, quantity: i.quantity };
       });
-      console.log(111, products);
       const order = new Order({
         user: {
           name: req.user.name,
@@ -107,7 +106,6 @@ exports.postOrder = (req, res, next) => {
         },
         products: products,
       });
-      console.log(999, order);
       return order.save();
     })
     .then(() => {
