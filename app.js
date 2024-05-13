@@ -21,10 +21,14 @@ const store = new MongoDBStore({
 const csrfProtection = csrf();
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "images");
+    const destinationPath = "./images/";
+    cb(null, destinationPath);
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + "-" + file.originalname);
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    );
   },
 });
 
@@ -36,7 +40,22 @@ const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ storage: fileStorage }).single("image"));
+app.use(
+  multer({
+    storage: fileStorage,
+    fileFilter: (req, file, cb) => {
+      if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg"
+      ) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    },
+  }).single("image")
+);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
@@ -57,7 +76,6 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   if (!req.session.user) {
-
     return next();
   }
   User.findById(req.session.user._id)
@@ -80,6 +98,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 app.use((err, req, res, next) => {
+  console.log(500, err);
   res.status(500).render("500", {
     pageTitle: "Internal server",
     path: "/500",
