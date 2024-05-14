@@ -35,7 +35,6 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
   const imageUrl = "/" + image.path;
-  console.log(111, imageUrl);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
