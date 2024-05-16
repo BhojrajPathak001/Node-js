@@ -12,26 +12,26 @@ exports.getProducts = (req, res, next) => {
 
   Product.find()
     .countDocuments()
-    .then(numProducts => {
+    .then((numProducts) => {
       totalItems = numProducts;
       return Product.find()
         .skip((page - 1) * ITEMS_PER_PAGE)
         .limit(ITEMS_PER_PAGE);
     })
-    .then(products => {
-      res.render('shop/product-list', {
+    .then((products) => {
+      res.render("shop/product-list", {
         prods: products,
-        pageTitle: 'Products',
-        path: '/products',
+        pageTitle: "Products",
+        path: "/products",
         currentPage: page,
         hasNextPage: ITEMS_PER_PAGE * page < totalItems,
         hasPreviousPage: page > 1,
         nextPage: page + 1,
         previousPage: page - 1,
-        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
-    .catch(err => {
+    .catch((err) => {
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
@@ -95,7 +95,6 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         pageTitle: "Your Cart",
         products: products,
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -233,4 +232,25 @@ exports.getInvoice = (req, res, next) => {
       // file.pipe(res);
     })
     .catch((err) => next(err));
+};
+
+exports.getCheckout = (req, res, next) => {
+  req.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      const products = user.cart.items;
+      let total = 0;
+      products.forEach((p) => {
+        total += p.quantity * p.productId.price;
+      });
+      res.render("shop/checkout", {
+        path: "/checkout",
+        pageTitle: "Checkout",
+        products: products,
+        totalSum: total,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
